@@ -1,0 +1,88 @@
+"use client"
+
+import { Plus, Minus, MoreVertical } from "lucide-react"
+import { useState } from "react"
+
+/**
+ * Habit Card Component
+ * @param {Object} props
+ * @param {string} props.name - Habit name
+ * @param {string} props.icon - Emoji or icon for the habit
+ * @param {string} props.color - Color for the progress bar and label
+ * @param {number} props.initialCount - Initial count value
+ * @param {number} props.goal - Goal count value
+ * @param {string} props.description - Habit description
+ */
+export default function HabitCard({ name, icon, color, initialCount, goal, description }) {
+  const [count, setCount] = useState(initialCount)
+
+  const incrementCount = () => {
+    if (count < goal) {
+      setCount(count + 1)
+    }
+  }
+
+  const decrementCount = () => {
+    if (count > 0) {
+      setCount(count - 1)
+    }
+  }
+
+  // Calculate progress percentage
+  const progressPercentage = Math.round((count / goal) * 100)
+
+  return (
+    <div className="bg-white rounded-lg shadow-md p-4 relative">
+      <div className="absolute right-4 top-4">
+        <MoreVertical className="w-5 h-5 text-gray-400" />
+      </div>
+
+      {/* Progress Bar */}
+      <div className="h-2 bg-gray-200 rounded-full mb-4">
+        <div
+          className="h-full rounded-full transition-all duration-300 ease-in-out"
+          style={{
+            width: `${progressPercentage}%`,
+            backgroundColor: color,
+          }}
+        ></div>
+      </div>
+
+      <div className="flex justify-between items-start">
+        <div className="space-y-4">
+          {/* Plus/Minus Buttons */}
+          <button
+            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+            onClick={incrementCount}
+            aria-label={`Increment ${name}`}
+          >
+            <Plus className="w-5 h-5" />
+          </button>
+          <button
+            className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
+            onClick={decrementCount}
+            aria-label={`Decrement ${name}`}
+          >
+            <Minus className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="flex-1 ml-4">
+          <div className="text-white px-3 py-2 rounded-md inline-block mb-2" style={{ backgroundColor: color }}>
+            <span className="flex items-center">
+              {icon} {name}
+            </span>
+          </div>
+          <p className="text-gray-700">{description}</p>
+        </div>
+
+        <div className="text-right">
+          <p className="text-3xl font-bold">
+            {count}/{goal}
+          </p>
+          <p className="text-[#45bb5b]">Weekly Goal: {goal}</p>
+        </div>
+      </div>
+    </div>
+  )
+}
