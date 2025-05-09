@@ -2,12 +2,25 @@
 
 import HabitCard from "./habit-card";
 import { useState, useEffect } from "react";
-import { Plus, Minus, MoreVertical } from "lucide-react"
+import { Plus } from "lucide-react"
+import { createClient } from '@/utils/supabase/server';
 
-export default function HabitTracker() {
 
-    useEffect(() => {
-        
+export default async function HabitTracker() {
+    const supabase = await createClient();
+
+    useEffect(() => {   
+        const fetchHabits = async () => {
+            let { data: habits, error } = await supabase
+                .from('habits')
+                .select('id')
+            if (error) {
+                console.error(error)
+            } else {
+                console.log(habits)
+            }
+        }
+        fetchHabits()
     }, [])
 
     const [habits] = useState([
