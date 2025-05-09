@@ -5,6 +5,11 @@ import { useState, useEffect } from "react";
 import { Plus, Minus, MoreVertical } from "lucide-react"
 
 export default function HabitTracker() {
+
+    useEffect(() => {
+        
+    }, [])
+
     const [habits] = useState([
         {
           id: 1,
