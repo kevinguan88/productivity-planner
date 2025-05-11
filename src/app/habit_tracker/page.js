@@ -3,27 +3,40 @@
 import HabitCard from "./habit-card";
 import { useState, useEffect } from "react";
 import { Plus } from "lucide-react"
-import { createClient } from '@/utils/supabase/server';
+import { createClient } from '@supabase/supabase-js'
 
 
-export default async function HabitTracker() {
-    const supabase = await createClient();
+export default function HabitTracker() {
+    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
 
     useEffect(() => {   
         const fetchHabits = async () => {
             let { data: habits, error } = await supabase
                 .from('habits')
-                .select('id')
+                .select('*')
             if (error) {
                 console.error(error)
             } else {
-                console.log(habits)
+                const habitObjects = habits.map((habit) => {
+                    return {
+                      id: habit.id,
+                      name: habit.name,
+                      icon: "📚",
+                      color: "#4b87ff",
+                      count: 4,
+                      goal: habit.weekly_goal,
+                      description: "testing",
+                      // Add any other properties you want to include in the habit object
+                    }
+                })
+                console.log(habitObjects)
+                setHabits(habitObjects)
             }
         }
         fetchHabits()
     }, [])
 
-    const [habits] = useState([
+    const [habits, setHabits] = useState([
         {
           id: 1,
           name: "Homework",
@@ -43,6 +56,8 @@ export default async function HabitTracker() {
           description: "Description",
         },
       ])
+
+    
 
     return (
     <div>
