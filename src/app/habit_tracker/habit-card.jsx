@@ -2,6 +2,7 @@
 
 import { Plus, Minus, MoreVertical } from "lucide-react"
 import { useState } from "react"
+import { createClient } from '@supabase/supabase-js'
 
 /**
  * Habit Card Component
@@ -13,18 +14,48 @@ import { useState } from "react"
  * @param {number} props.goal - Goal count value
  * @param {string} props.description - Habit description
  */
-export default function HabitCard({ name, icon, color, initialCount, goal, description }) {
+export default function HabitCard({ id, name, icon, color, initialCount, goal, description }) {
   const [count, setCount] = useState(initialCount)
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
 
-  const incrementCount = () => {
+
+  const incrementCount = async () => {
     if (count < goal) {
       setCount(count + 1)
+      const { data, error } = await supabase
+        .from('habit_completion')
+        .insert([
+          { habit_id: id, completed_at: new Date(), },
+        ])
+        .select()
+        if (error) {
+          console.error(error)
+        }
+        else {
+          console.log("inserting", data)
+        }
+
     }
   }
 
-  const decrementCount = () => {
+  const decrementCount = async () => {
     if (count > 0) {
       setCount(count - 1)
+      const { data, error } = await supabase
+        .from('habit_completion')
+        .delete()
+        .eq('habit_id', id)
+        .order('completed_at', { ascending: false })
+        .limit(1)
+
+    if (error) {
+      console.error(error)
+    }
+    else {
+      console.log("deleting", data)
+    }
+
+
     }
   }
 
