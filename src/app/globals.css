@@ -32,6 +32,11 @@ body {
   background-image: linear-gradient(to right, #FFFb0020 15%, #AA550020 100%);
 }
 
+.bg-timer {
+  background-color: #F4C455;
+  background-image: linear-gradient(to right, #FF8C0020 15%, #AA410020 100%);
+}
+
 /* Border classes for header */
 .border-header-home {
   border-bottom: 3px solid #00966E;
@@ -41,6 +46,9 @@ body {
 }
 .border-header-todo {
   border-bottom: 3px solid #B03800;
+}
+.border-header-timer {
+  border-bottom: 3px solid #B07200;
 }
 
 /* Border classes for footer */
@@ -52,4 +60,7 @@ body {
 }
 .border-footer-todo {
   border-top: 3px solid #B03800;
+}
+.border-footer-timer {
+  border-top: 3px solid #B07200;
 }

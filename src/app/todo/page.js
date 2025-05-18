@@ -1,7 +1,9 @@
+import TodoList from "../../components/TodoList"
+
 export default function Todo() {
     return (
-        <div>
-            <h1>To-Do Page</h1>
+        <div className="border-2 m-1 bg-gray-300 w-full h-full flex-1 border-neutral-400">
+           <TodoList />
         </div>
     )
 }

@@ -6,6 +6,7 @@ const styleMap = {
   "/": { bg: "bg-home", border: "border-footer-home" },
   "/calendar": { bg: "bg-calendar", border: "border-footer-calendar" },
   "/todo": { bg: "bg-todo", border: "border-footer-todo" },
+  "/timer": { bg: "bg-timer", border: "border-footer-timer" },
 };
 
 export default function Footer() {

@@ -1,12 +1,13 @@
 "use client";
 import Link from 'next/link';
-import { Home, Calendar, CheckSquare, ListTodo } from "lucide-react";
+import { Home, Calendar, CheckSquare, ListTodo, Clock1 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const styleMap = {
   "/": { bg: "bg-home", border: "border-header-home" },
   "/calendar": { bg: "bg-calendar", border: "border-header-calendar" },
   "/todo": { bg: "bg-todo", border: "border-header-todo" },
+  "/timer": { bg: "bg-timer", border: "border-header-timer" },
 };
 
 export default function Header() {
@@ -21,6 +22,7 @@ export default function Header() {
         <Link href="calendar" title="Calendar"><Calendar className="w-6 h-6" /></Link>
         <Link href="todo" title="To-Do"><CheckSquare className="w-6 h-6" /></Link>
         <Link href="habit_tracker" title="Habits"><ListTodo className="w-6 h-6" /></Link>
+        <Link href="timer" title="Timer"><Clock1 className="w-6 h-6" /></Link>
       </div>
     </header>
   );
