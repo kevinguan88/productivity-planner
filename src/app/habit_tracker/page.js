@@ -17,18 +17,28 @@ export default function HabitTracker() {
             if (error) {
                 console.error(error)
             } else {
-                const habitObjects = habits.map((habit) => {
-                    return {
-                      id: habit.id,
-                      name: habit.name,
-                      icon: "📚",
-                      color: "#4b87ff",
-                      count: 4,
-                      goal: habit.weekly_goal,
-                      description: "testing",
-                      // Add any other properties you want to include in the habit object
+                const habitObjects = await Promise.all(habits.map(async (habit) => {
+                    const { data: completions, error: completionError } = await supabase
+                      .from('habit_completion')
+                      .select('id')
+                      .eq('habit_id', habit.id)
+              
+                    if (completionError) {
+                      console.error(completionError)
+                    } else {
+                      const completionCount = completions.length
+                      return {
+                        id: habit.id,
+                        name: habit.name,
+                        icon: "📚",
+                        color: "#4b87ff",
+                        count: completionCount,
+                        goal: habit.weekly_goal,
+                        description: "testing",
+                        // Add any other properties you want to include in the habit object
+                      }
                     }
-                })
+                  }))              
                 console.log(habitObjects)
                 setHabits(habitObjects)
             }
@@ -36,28 +46,7 @@ export default function HabitTracker() {
         fetchHabits()
     }, [])
 
-    const [habits, setHabits] = useState([
-        {
-          id: 1,
-          name: "Homework",
-          icon: "📚",
-          color: "#4b87ff",
-          count: 4,
-          goal: 5,
-          description: "Description",
-        },
-        {
-          id: 2,
-          name: "Work Out",
-          icon: "💪",
-          color: "#f46555",
-          count: 4,
-          goal: 5,
-          description: "Description",
-        },
-      ])
-
-    
+    const [habits, setHabits] = useState([])
 
     return (
     <div>
@@ -67,7 +56,7 @@ export default function HabitTracker() {
           {/* Habit Cards */}
           {habits.map((habit) => (
             <HabitCard
-              key={habit.id}
+              id={habit.id}
               name={habit.name}
               icon={habit.icon}
               color={habit.color}
