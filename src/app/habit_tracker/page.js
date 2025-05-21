@@ -4,6 +4,8 @@ import HabitCard from "./habit-card";
 import { useState, useEffect } from "react";
 import { Plus } from "lucide-react"
 import { createClient } from '@supabase/supabase-js'
+import AddHabitModal from "@/components/add-habit-modal"
+
 
 
 export default function HabitTracker() {
@@ -48,6 +50,12 @@ export default function HabitTracker() {
 
     const [habits, setHabits] = useState([])
 
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const handleAddHabit = (newHabit) => {
+      setHabits([...habits, newHabit])
+    }
+
     return (
     <div>
         {/* Main Content */}
@@ -67,12 +75,17 @@ export default function HabitTracker() {
           ))}
 
           {/* Add New Habit Button */}
-          <button className="bg-[#4b87ff] text-white py-6 rounded-lg flex items-center justify-center mt-auto hover:bg-[#3a76ee] transition-colors">
+          <button
+            className="bg-[#4b87ff] text-white py-6 rounded-lg flex items-center justify-center mt-auto hover:bg-[#3a76ee] transition-colors"
+            onClick={() => setIsModalOpen(true)}
+          >
             <Plus className="w-6 h-6 mr-2" />
             <span className="text-xl">Add New Habit</span>
           </button>
         </div>
       </main>
+      {/* Add Habit Modal */}
+      <AddHabitModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddHabit={handleAddHabit} />
     </div>
     )
 }
