@@ -46,7 +46,7 @@ export default function HabitTracker() {
             }
         }
         fetchHabits()
-    }, [])
+    }, [supabase])
 
     const [habits, setHabits] = useState([])
 
@@ -64,6 +64,7 @@ export default function HabitTracker() {
           {/* Habit Cards */}
           {habits.map((habit) => (
             <HabitCard
+              key={habit.id}
               id={habit.id}
               name={habit.name}
               icon={habit.icon}
