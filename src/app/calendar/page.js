@@ -1,14 +1,63 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import MonthCalendar from "@/components/month-calendar"
 import { addMonths, format } from "date-fns"
+import { createClient } from '@supabase/supabase-js'
+
 
 export default function HabitTracker() {
   const [activeTab, setActiveTab] = useState("habits")
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [habitCompletions, setHabitCompletions] = useState([])
+  const [habits, setHabits] = useState([])
+
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
+  
+      useEffect(() => {   
+          const fetchHabitCompletions = async () => {
+              let { data: habitCompletion, error } = await supabase
+                  .from('habit_completion')
+                  .select('*')
+              if (error) {
+                  console.error(error)
+              } else {
+                  const habitCompletionObjects = await Promise.all(habitCompletion.map(async (completion) => {
+                        return {
+                          habitId: completion.habit_id,
+                          timestamp: completion.completed_at                       
+                        }
+                      }
+                  ))              
+                  console.log(habitCompletionObjects)
+                  setHabitCompletions(habitCompletionObjects)
+              }
+          }
+
+          const fetchHabits = async () => {
+            let { data: habits, error } = await supabase
+                .from('habits')
+                .select('*')
+            if (error) {
+                console.error(error)
+            } else {
+                const habitObjects = await Promise.all(habits.map(async (habit) => {
+                    return {
+                      id: habit.id,
+                      title: habit.name,
+                      color: "blue"
+                      // Add any other properties you want to include in the habit object
+                    }
+                  }))              
+                console.log(habitObjects)
+                setHabits(habitObjects)
+            }
+          }
+        fetchHabitCompletions()
+        fetchHabits()
+      }, [])
 
   const navigateMonth = (direction) => {
     setCurrentDate((prevDate) => {
@@ -72,7 +121,7 @@ export default function HabitTracker() {
 
       {/* Calendar */}
       <div className="w-full overflow-x-auto">
-        <MonthCalendar date={currentDate} habits={sampleHabits} habitCompletions={sampleHabitCompletions} />
+        <MonthCalendar date={currentDate} habits={habits} habitCompletions={habitCompletions} />
       </div>
     </div>
   )

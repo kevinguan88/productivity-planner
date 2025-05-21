@@ -46,7 +46,7 @@ export default function HabitTracker() {
             }
         }
         fetchHabits()
-    }, [supabase])
+    }, [])
 
     const [habits, setHabits] = useState([])
 
