@@ -33,7 +33,7 @@ export default function HabitTracker() {
                         id: habit.id,
                         name: habit.name,
                         icon: "📚",
-                        color: "#4b87ff",
+                        color: habit.color,
                         count: completionCount,
                         goal: habit.weekly_goal,
                         description: "testing",
