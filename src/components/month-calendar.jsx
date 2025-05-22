@@ -68,28 +68,6 @@ export default function MonthCalendar({ date, habits, habitCompletions }) {
 }
 
 function CalendarCell({ day, isCurrentMonth, habits, habitCompletions }) {
-  const getBadgeColor = (color) => {
-    // switch (color) {
-    //   case "blue":
-    //     return "bg-[#d6e4ff] text-[#4b87ff]"
-    //   case "red":
-    //     return "bg-[#ffcfcf] text-[#ff3b3b]"
-    //   case "green":
-    //     return "bg-[#d7f8df] text-[#00ba34]"
-    //   case "purple":
-    //     return "bg-[#ffccff] text-[#800080]"
-    //   case "orange":
-    //     return "bg-[#ffebd9] text-[#ff8f00]"
-    //   default:
-    //     return "bg-gray-100 text-gray-600"
-    // }
-    const lightened = lighten(0.8, color);
-    return `bg-[${lightened}] text-[${color}]`
-  }
-
-  const getCountBadgeColor = (color) => {
-   return `bg-${color} text-white`
-  }
 
   // Get habit completions for this day
   const dayCompletions = getHabitCompletionsForDay(day, habits, habitCompletions)
