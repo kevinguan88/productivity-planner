@@ -47,7 +47,7 @@ export default function HabitTracker() {
                     return {
                       id: habit.id,
                       title: habit.name,
-                      color: "blue"
+                      color: habit.color
                       // Add any other properties you want to include in the habit object
                     }
                   }))              

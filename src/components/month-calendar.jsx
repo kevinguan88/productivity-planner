@@ -10,6 +10,7 @@ import {
   isToday,
 } from "date-fns"
 import { cn } from "@/lib/utils"
+import { lighten, transparentize } from "polished"
 
 export default function MonthCalendar({ date, habits, habitCompletions }) {
   // Get all days in the current month view (including days from prev/next months)
@@ -68,37 +69,26 @@ export default function MonthCalendar({ date, habits, habitCompletions }) {
 
 function CalendarCell({ day, isCurrentMonth, habits, habitCompletions }) {
   const getBadgeColor = (color) => {
-    switch (color) {
-      case "blue":
-        return "bg-[#d6e4ff] text-[#4b87ff]"
-      case "red":
-        return "bg-[#ffcfcf] text-[#ff3b3b]"
-      case "green":
-        return "bg-[#d7f8df] text-[#00ba34]"
-      case "purple":
-        return "bg-[#ffccff] text-[#800080]"
-      case "orange":
-        return "bg-[#ffebd9] text-[#ff8f00]"
-      default:
-        return "bg-gray-100 text-gray-600"
-    }
+    // switch (color) {
+    //   case "blue":
+    //     return "bg-[#d6e4ff] text-[#4b87ff]"
+    //   case "red":
+    //     return "bg-[#ffcfcf] text-[#ff3b3b]"
+    //   case "green":
+    //     return "bg-[#d7f8df] text-[#00ba34]"
+    //   case "purple":
+    //     return "bg-[#ffccff] text-[#800080]"
+    //   case "orange":
+    //     return "bg-[#ffebd9] text-[#ff8f00]"
+    //   default:
+    //     return "bg-gray-100 text-gray-600"
+    // }
+    const lightened = lighten(0.8, color);
+    return `bg-[${lightened}] text-[${color}]`
   }
 
   const getCountBadgeColor = (color) => {
-    switch (color) {
-      case "blue":
-        return "bg-[#4b87ff] text-white"
-      case "red":
-        return "bg-[#ff3b3b] text-white"
-      case "green":
-        return "bg-[#00ba34] text-white"
-      case "purple":
-        return "bg-[#800080] text-white"
-      case "orange":
-        return "bg-[#ff8f00] text-white"
-      default:
-        return "bg-gray-500 text-white"
-    }
+   return `bg-${color} text-white`
   }
 
   // Get habit completions for this day
@@ -121,14 +111,23 @@ function CalendarCell({ day, isCurrentMonth, habits, habitCompletions }) {
       <div className="flex flex-col gap-1 items-end">
         {dayCompletions.map((habitData) => (
           <div key={habitData.id} className="flex items-center gap-1">
-            <span className={cn("text-xs px-2 py-1 rounded-md", getBadgeColor(habitData.color))}>
+            <span className={cn("text-xs px-2 py-1 rounded-md")}
+            style={{
+                backgroundColor: transparentize(0.9, habitData.color),
+                color: habitData.color
+              }}
+            >
               {habitData.title}
             </span>
             <span
               className={cn(
                 "flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium",
-                getCountBadgeColor(habitData.color),
               )}
+              style={{
+                backgroundColor: habitData.color,
+                color: "white"
+              }}
+
             >
               {habitData.count}
             </span>
