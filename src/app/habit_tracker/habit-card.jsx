@@ -3,18 +3,19 @@
 import { Plus, Minus, MoreVertical } from "lucide-react"
 import { useState } from "react"
 import { createClient } from '@supabase/supabase-js'
+import * as Lucide from 'lucide-react'
 
 /**
  * Habit Card Component
  * @param {Object} props
  * @param {string} props.name - Habit name
- * @param {string} props.icon - Emoji or icon for the habit
+ * @param {string} props.icon_name - Emoji or icon for the habit
  * @param {string} props.color - Color for the progress bar and label
  * @param {number} props.initialCount - Initial count value
  * @param {number} props.goal - Goal count value
  * @param {string} props.description - Habit description
  */
-export default function HabitCard({ id, name, icon, color, initialCount, goal, description }) {
+export default function HabitCard({ id, name, icon_name, color, initialCount, goal, description }) {
   const [count, setCount] = useState(initialCount)
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
 
@@ -55,12 +56,14 @@ export default function HabitCard({ id, name, icon, color, initialCount, goal, d
       console.log("deleting", data)
     }
 
-
     }
   }
 
   // Calculate progress percentage
-  const progressPercentage = Math.round((count / goal) * 100)
+  const progressPercentage = Math.round((count / goal) * 100);
+
+  const Icon = Lucide[icon_name] || Lucide.Circle;
+  console.log("icon name: ", icon_name)
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 relative">
@@ -101,7 +104,8 @@ export default function HabitCard({ id, name, icon, color, initialCount, goal, d
         <div className="flex-1 ml-4">
           <div className="text-white px-3 py-2 rounded-md inline-block mb-2" style={{ backgroundColor: color }}>
             <span className="flex items-center">
-              {icon} {name}
+              <Icon className="w-4 h-4 mx-1" />
+              {name}
             </span>
           </div>
           <p className="text-gray-700">{description}</p>

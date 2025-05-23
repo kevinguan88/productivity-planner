@@ -31,6 +31,9 @@ import {
   Calendar,
   Flame,
 } from "lucide-react"
+import { createClient } from '@supabase/supabase-js'
+
+
 
 // Array of Lucide icons with their names
 const ICON_OPTIONS = [
@@ -82,6 +85,8 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
   const [color, setColor] = useState("#4b87ff")
   const [selectedIconIndex, setSelectedIconIndex] = useState(0)
   const [showCustomColor, setShowCustomColor] = useState(false)
+  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
+  
 
   const handleSubmit = (e) => {
     e.preventDefault()

@@ -32,7 +32,7 @@ export default function HabitTracker() {
                       return {
                         id: habit.id,
                         name: habit.name,
-                        icon: "📚",
+                        icon_name: habit.icon_name,
                         color: habit.color,
                         count: completionCount,
                         goal: habit.weekly_goal,
@@ -67,7 +67,7 @@ export default function HabitTracker() {
               key={habit.id}
               id={habit.id}
               name={habit.name}
-              icon={habit.icon}
+              icon_name={habit.icon_name}
               color={habit.color}
               initialCount={habit.count}
               goal={habit.goal}
