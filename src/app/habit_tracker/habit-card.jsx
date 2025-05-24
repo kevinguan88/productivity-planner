@@ -63,7 +63,6 @@ export default function HabitCard({ id, name, icon_name, color, initialCount, go
   const progressPercentage = Math.round((count / goal) * 100);
 
   const Icon = Lucide[icon_name] || Lucide.Circle;
-  console.log("icon name: ", icon_name)
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 relative">

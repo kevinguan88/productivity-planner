@@ -41,7 +41,6 @@ export default function HabitTracker() {
                       }
                     }
                   }))              
-                console.log(habitObjects)
                 setHabits(habitObjects)
             }
         }
@@ -52,9 +51,9 @@ export default function HabitTracker() {
 
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const handleAddHabit = (newHabit) => {
-      setHabits([...habits, newHabit])
-    }
+    // const handleAddHabit = (newHabit) => {
+    //   setHabits([...habits, newHabit])
+    // }
 
     return (
     <div>
@@ -86,7 +85,7 @@ export default function HabitTracker() {
         </div>
       </main>
       {/* Add Habit Modal */}
-      <AddHabitModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onAddHabit={handleAddHabit} />
+      <AddHabitModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
     )
 }

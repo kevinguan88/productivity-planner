@@ -78,7 +78,7 @@ const COLOR_PRESETS = [
   { name: "Yellow", value: "#ffd43b" },
 ]
 
-export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
+export default function AddHabitModal({ isOpen, onClose }) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [goal, setGoal] = useState(5)
@@ -88,7 +88,7 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
   const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
   
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     // Basic validation
@@ -99,7 +99,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
 
     // Create new habit object
     const newHabit = {
-      id: Date.now(), // Simple unique ID
       name: name.trim(),
       description: description.trim(),
       goal: Number(goal),
@@ -109,8 +108,26 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
       count: 0,
     }
 
+    // console.log('newHabit', newHabit)
+
     // Add the habit
-    onAddHabit(newHabit)
+    // onAddHabit(newHabit)
+
+    console.log({name: newHabit.name},
+      {description: newHabit.description},
+      {weekly_goal: newHabit.goal},
+      {color: newHabit.color},
+      {icon_name: newHabit.iconName})
+
+    // Add the habit to the database
+    let { error } = await supabase.from('habits').insert([
+      {name: newHabit.name, weekly_goal: newHabit.goal, color: newHabit.color, icon_name: newHabit.iconName },  
+    ])
+      if (error) {
+        console.error(error)
+      }
+
+    console.log('inserting,', newHabit)
 
     // Reset form and close modal
     resetForm()
