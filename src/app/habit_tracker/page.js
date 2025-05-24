@@ -36,7 +36,7 @@ export default function HabitTracker() {
                         color: habit.color,
                         count: completionCount,
                         goal: habit.weekly_goal,
-                        description: "testing",
+                        description: habit.description,
                         // Add any other properties you want to include in the habit object
                       }
                     }
