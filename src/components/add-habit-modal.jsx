@@ -31,39 +31,39 @@ import {
   Calendar,
   Flame,
 } from "lucide-react"
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabaseClient'
 
 
 
 // Array of Lucide icons with their names
 const ICON_OPTIONS = [
-  { icon: Book, name: "Book" },
-  { icon: Dumbbell, name: "Dumbbell" },
-  { icon: Running, name: "Running" },
-  { icon: Yoga, name: "Yoga" },
-  { icon: Moon, name: "Moon" },
-  { icon: Droplets, name: "Water" },
-  { icon: Apple, name: "Apple" },
-  { icon: PenLine, name: "Write" },
-  { icon: Brain, name: "Brain" },
-  { icon: Target, name: "Target" },
-  { icon: Heart, name: "Heart" },
-  { icon: Coffee, name: "Coffee" },
-  { icon: Music, name: "Music" },
-  { icon: Code, name: "Code" },
-  { icon: Bike, name: "Bike" },
-  { icon: Utensils, name: "Eat" },
-  { icon: Cigarette, name: "No Smoking" },
-  { icon: Gamepad2, name: "Gaming" },
-  { icon: BookOpen, name: "Read" },
-  { icon: Palette, name: "Art" },
-  { icon: Pill, name: "Medicine" },
-  { icon: Plant, name: "Plant" },
-  { icon: Smile, name: "Smile" },
-  { icon: Zap, name: "Energy" },
-  { icon: Clock, name: "Time" },
-  { icon: Calendar, name: "Calendar" },
-  { icon: Flame, name: "Flame" },
+  { icon: Book, label: "Book", key: "Book" },
+  { icon: Dumbbell, label: "Workout", key: "Dumbbell" },
+  { icon: Running, label: "Run", key: "Running" },
+  { icon: Yoga, label: "Yoga", key: "Yoga" },
+  { icon: Moon, label: "Sleep", key: "Moon" },
+  { icon: Droplets, label: "Water", key: "Droplets" },
+  { icon: Apple, label: "Eat Healthy", key: "Apple" },
+  { icon: PenLine, label: "Write", key: "PenLine" },
+  { icon: Brain, label: "Think", key: "Brain" },
+  { icon: Target, label: "Focus", key: "Target" },
+  { icon: Heart, label: "Love", key: "Heart" },
+  { icon: Coffee, label: "Coffee", key: "Coffee" },
+  { icon: Music, label: "Music", key: "Music" },
+  { icon: Code, label: "Code", key: "Code" },
+  { icon: Bike, label: "Bike", key: "Bike" },
+  { icon: Utensils, label: "Eat", key: "Utensils" },
+  { icon: Cigarette, label: "No Smoking", key: "Cigarette" },
+  { icon: Gamepad2, label: "Gaming", key: "Gamepad2" },
+  { icon: BookOpen, label: "Read", key: "BookOpen" },
+  { icon: Palette, label: "Art", key: "Palette" },
+  { icon: Pill, label: "Medicine", key: "Pill" },
+  { icon: Plant, label: "Plant", key: "Plant" },
+  { icon: Smile, label: "Smile", key: "Smile" },
+  { icon: Zap, label: "Energy", key: "Zap" },
+  { icon: Clock, label: "Time", key: "Clock" },
+  { icon: Calendar, label: "Calendar", key: "Calendar" },
+  { icon: Flame, label: "Flame", key: "Flame" },
 ]
 
 // Preset colors with names
@@ -84,9 +84,7 @@ export default function AddHabitModal({ isOpen, onClose }) {
   const [goal, setGoal] = useState(5)
   const [color, setColor] = useState("#4b87ff")
   const [selectedIconIndex, setSelectedIconIndex] = useState(0)
-  const [showCustomColor, setShowCustomColor] = useState(false)
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
-  
+  const [showCustomColor, setShowCustomColor] = useState(false)  
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -103,7 +101,8 @@ export default function AddHabitModal({ isOpen, onClose }) {
       description: description.trim(),
       goal: Number(goal),
       color,
-      iconName: ICON_OPTIONS[selectedIconIndex].name,
+      iconLabel: ICON_OPTIONS[selectedIconIndex].label,
+      iconName: ICON_OPTIONS[selectedIconIndex].key,
       iconComponent: ICON_OPTIONS[selectedIconIndex].icon,
       count: 0,
     }

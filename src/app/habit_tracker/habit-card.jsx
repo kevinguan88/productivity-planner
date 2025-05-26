@@ -2,7 +2,7 @@
 
 import { Plus, Minus, MoreVertical } from "lucide-react"
 import { useState } from "react"
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabaseClient'
 import * as Lucide from 'lucide-react'
 
 /**
@@ -17,8 +17,6 @@ import * as Lucide from 'lucide-react'
  */
 export default function HabitCard({ id, name, icon_name, color, initialCount, goal, description }) {
   const [count, setCount] = useState(initialCount)
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
-
 
   const incrementCount = async () => {
     if (count < goal) {

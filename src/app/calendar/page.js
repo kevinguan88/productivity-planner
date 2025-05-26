@@ -5,7 +5,7 @@ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import MonthCalendar from "@/components/month-calendar"
 import { addMonths, format } from "date-fns"
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabaseClient'
 
 
 export default function HabitTracker() {
@@ -13,8 +13,6 @@ export default function HabitTracker() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [habitCompletions, setHabitCompletions] = useState([])
   const [habits, setHabits] = useState([])
-
-  const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
   
       useEffect(() => {   
           const fetchHabitCompletions = async () => {

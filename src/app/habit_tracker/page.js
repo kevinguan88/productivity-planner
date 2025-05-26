@@ -3,14 +3,12 @@
 import HabitCard from "./habit-card";
 import { useState, useEffect } from "react";
 import { Plus } from "lucide-react"
-import { createClient } from '@supabase/supabase-js'
 import AddHabitModal from "@/components/add-habit-modal"
+import { supabase } from '@/lib/supabaseClient'
 
 
 
 export default function HabitTracker() {
-    const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SERVICE_SUPABASE_KEY);
-
     useEffect(() => {   
         const fetchHabits = async () => {
             let { data: habits, error } = await supabase
