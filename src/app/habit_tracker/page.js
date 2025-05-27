@@ -17,12 +17,19 @@ export default function HabitTracker() {
             if (error) {
                 console.error(error)
             } else {
-                const habitObjects = await Promise.all(habits.map(async (habit) => {
-                    const { data: completions, error: completionError } = await supabase
-                      .from('habit_completion')
-                      .select('id')
-                      .eq('habit_id', habit.id)
-              
+                   const habitObjects = await Promise.all(habits.map(async (habit) => {
+                   const startOfWeek = new Date()
+                   startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
+                   const endOfWeek = new Date()
+                   endOfWeek.setDate(endOfWeek.getDate() - endOfWeek.getDay() + 7)
+                               
+                   const { data: completions, error: completionError } = await supabase
+                     .from('habit_completion')
+                     .select('id')
+                     .eq('habit_id', habit.id)
+                     .gte('completed_at', startOfWeek.toISOString())
+                     .lte('completed_at', endOfWeek.toISOString())
+
                     if (completionError) {
                       console.error(completionError)
                     } else {
