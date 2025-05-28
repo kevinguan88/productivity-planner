@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Trash2, Pencil } from 'lucide-react';
+import { Trash2, Pencil, Circle, CircleCheck } from 'lucide-react';
 import ConfirmDialog from './ConfirmDialog';
 import EditTodoItemDialog from './EditTodoItemDialog';
 import { TodoService } from '../services/todo.service'; // Adjust the path as needed
@@ -9,6 +9,23 @@ import { TodoService } from '../services/todo.service'; // Adjust the path as ne
 export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [hover, setHover] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
+
+  const handleMouseEnter = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    setTimeoutId(setTimeout(() => setHover(true), 100));
+  };
+
+  const handleMouseLeave = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+    setHover(false);
+  };
+
 
   const handleDelete = () => {
     TodoService.deleteTodo(index);
@@ -28,6 +45,13 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
       <div className="flex items-center justify-between border-2 m-1 p-2 bg-blue-100 border-neutral-600 rounded">
         {/* Left Side: Title and Habit */}
         <div className="flex items-center gap-2">
+          <div
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
+            {hover ? <CircleCheck size={24} /> : <Circle size={24} />}
+          </div>
+
           <span className="font-semibold">{taskTitle}</span>
           <span className="px-2 py-1 bg-green-200 text-green-800 text-xs font-medium rounded">
             {habit}
