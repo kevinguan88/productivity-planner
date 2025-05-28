@@ -140,7 +140,7 @@ export default function HabitCard({ id, name, icon_name, color, initialCount, go
           <p className="text-gray-700">{description}</p>
         </div>
 
-        <div className="text-right">
+        <div className="text-right mr-8">
           <p className="text-3xl font-bold">
             {count}/{goal}
           </p>
