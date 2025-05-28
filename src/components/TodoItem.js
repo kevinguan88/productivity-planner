@@ -9,23 +9,6 @@ import { TodoService } from '../services/todo.service'; // Adjust the path as ne
 export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
-  const [hover, setHover] = useState(false);
-  const [timeoutId, setTimeoutId] = useState(null);
-
-  const handleMouseEnter = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    setTimeoutId(setTimeout(() => setHover(true), 100));
-  };
-
-  const handleMouseLeave = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    setHover(false);
-  };
-
 
   const handleDelete = () => {
     TodoService.deleteTodo(index);
@@ -45,13 +28,13 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
       <div className="flex items-center justify-between border-2 m-1 p-2 bg-blue-100 border-neutral-600 rounded">
         {/* Left Side: Title and Habit */}
         <div className="flex items-center gap-2">
-          <div
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            {hover ? <CircleCheck size={24} /> : <Circle size={24} />}
-          </div>
+          <div className="relative w-6 h-6 group cursor-pointer">
+            {/* Circle icon - visible by default */}
+            <Circle className="absolute inset-0 transition-opacity duration-200 opacity-100 group-hover:opacity-0" />
 
+            {/* Check icon - visible on hover */}
+            <CircleCheck className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
+          </div>
           <span className="font-semibold">{taskTitle}</span>
           <span className="px-2 py-1 bg-green-200 text-green-800 text-xs font-medium rounded">
             {habit}
