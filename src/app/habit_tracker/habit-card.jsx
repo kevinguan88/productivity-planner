@@ -1,9 +1,9 @@
 "use client"
 
 import { Plus, Minus, MoreVertical } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { supabase } from '@/lib/supabaseClient'
-import * as Lucide from 'lucide-react'
+import * as Lucide from 'lucide-react' 
 
 /**
  * Habit Card Component
@@ -14,9 +14,21 @@ import * as Lucide from 'lucide-react'
  * @param {number} props.initialCount - Initial count value
  * @param {number} props.goal - Goal count value
  * @param {string} props.description - Habit description
+ * @param {Function} props.onDelete - Function to call when deleting the habit
  */
-export default function HabitCard({ id, name, icon_name, color, initialCount, goal, description }) {
+export default function HabitCard({ id, name, icon_name, color, initialCount, goal, description, onDelete }) {
   const [count, setCount] = useState(initialCount)
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef(null)
+  const Trash2 = Lucide.Trash2
+
+  const handleDelete = () => {
+    if (window.confirm(`Are you sure you want to delete the "${name}" habit?`)) {
+      onDelete(id)
+    }
+    setShowDropdown(false)
+  }
+
 
   const incrementCount = async () => {
     if (count < goal) {
@@ -64,12 +76,32 @@ export default function HabitCard({ id, name, icon_name, color, initialCount, go
 
   return (
     <div className="bg-white rounded-lg shadow-md p-4 relative">
-      <div className="absolute right-4 top-4">
-        <MoreVertical className="w-5 h-5 text-gray-400" />
+      {/* Three-dot menu positioned to the right of progress bar */}
+      <div className="absolute right-4 top-4" ref={dropdownRef}>
+        <button
+          onClick={() => setShowDropdown(!showDropdown)}
+          className="text-gray-400 hover:text-gray-600 p-1 rounded-full hover:bg-gray-100 transition-colors"
+          aria-label="More options"
+        >
+          <MoreVertical className="w-5 h-5" />
+        </button>
+
+        {/* Dropdown Menu */}
+        {showDropdown && (
+          <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[120px]">
+            <button
+              onClick={handleDelete}
+              className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 flex items-center gap-2 rounded-lg transition-colors"
+            >
+              <Trash2 className="w-4 h-4" />
+              Delete
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Progress Bar */}
-      <div className="h-2 bg-gray-200 rounded-full mb-4">
+      <div className="h-2 bg-gray-200 rounded-full mb-4 mr-8">
         <div
           className="h-full rounded-full transition-all duration-300 ease-in-out"
           style={{

@@ -60,6 +60,16 @@ export default function HabitTracker() {
     //   setHabits([...habits, newHabit])
     // }
 
+    const handleDeleteHabit = async (habitId) => {
+      let { error } = await supabase
+        .from('habits')
+        .delete()
+        .eq('id', habitId)
+      if (error) {
+        console.error(error)
+      }
+    }
+
     return (
     <div>
         {/* Main Content */}
@@ -76,6 +86,7 @@ export default function HabitTracker() {
               initialCount={habit.count}
               goal={habit.goal}
               description={habit.description}
+              onDelete={handleDeleteHabit}
             />
           ))}
 
