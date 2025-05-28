@@ -10,7 +10,18 @@ import { supabase } from '@/lib/supabaseClient'
 
 export default function HabitTracker() {
     useEffect(() => {   
-        const fetchHabits = async () => {
+        fetchHabits()
+    }, [])
+
+    const [habits, setHabits] = useState([])
+
+    const [isModalOpen, setIsModalOpen] = useState(false)
+
+    // const handleAddHabit = (newHabit) => {
+    //   setHabits([...habits, newHabit])
+    // }
+
+    const fetchHabits = async () => {
             let { data: habits, error } = await supabase
                 .from('habits')
                 .select('*')
@@ -49,16 +60,6 @@ export default function HabitTracker() {
                 setHabits(habitObjects)
             }
         }
-        fetchHabits()
-    }, [])
-
-    const [habits, setHabits] = useState([])
-
-    const [isModalOpen, setIsModalOpen] = useState(false)
-
-    // const handleAddHabit = (newHabit) => {
-    //   setHabits([...habits, newHabit])
-    // }
 
     const handleDeleteHabit = async (habitId) => {
       let { error } = await supabase
@@ -67,6 +68,9 @@ export default function HabitTracker() {
         .eq('id', habitId)
       if (error) {
         console.error(error)
+      }
+      else {
+        fetchHabits()
       }
     }
 
