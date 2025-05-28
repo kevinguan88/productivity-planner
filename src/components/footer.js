@@ -15,7 +15,7 @@ export default function Footer() {
 
   return (
     <footer className={`p-4 text-center text-white ${style.bg} ${style.border}`}>
-      <p>&copy; 2025 Productivity Planner</p>
+      <p>&copy; 2025 StarFlow</p>
     </footer>
   );
 }

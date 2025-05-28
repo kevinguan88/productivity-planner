@@ -16,7 +16,7 @@ export default function Header() {
 
   return (
     <header className={`p-4 text-white flex items-center justify-between ${style.bg} ${style.border}`}>
-      <h1 className="text-xl font-bold">Productivity Planner</h1>
+      <h1 className="text-xl font-bold">StarFlow</h1>
       <div className="flex gap-6 text-lg">
         <Link href="./" title="Home"><Home className="w-6 h-6" /></Link>
         <Link href="calendar" title="Calendar"><Calendar className="w-6 h-6" /></Link>
