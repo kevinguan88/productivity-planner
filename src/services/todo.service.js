@@ -13,7 +13,7 @@ async function supabaseFetchHabit(habitId) {
   if (error) {
     console.error(error)
   } else {
-    console.log('habit fetched', habits)
+    //console.log('habit fetched', habits)
     return habits[0]
   }
 }
@@ -45,6 +45,7 @@ async function supabaseFetchTodos() {
 }
 
 // updates a todo's completion date in supabase
+//TODO: error with checking off wrong task and not updating list
 async function supabaseCheckOffTodo(index) {
   const { tasks, error } = await supabase
     .from('tasks')
