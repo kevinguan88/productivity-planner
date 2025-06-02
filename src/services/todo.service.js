@@ -27,6 +27,7 @@ async function supabaseFetchTodos() {
     console.error(error)
   } else {
     console.log('tasks fetched', tasks)
+    // convert tasks to todo objects and assigns habits to them
     const todoObjects = await Promise.all(tasks.map(async (task) => {
       const habit = await supabaseFetchHabit(task.habit_id);
       const habitTitle = habit ? habit.title : '';
