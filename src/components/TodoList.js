@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import TodoItem from './TodoItem';
 import { TodoService } from '../services/todo.service';
+import Todo from '@/app/todo/page';
 
 export default function TodoList() {
   const [todos, setTodos] = useState([]);
 
-  const refreshTodos = () => {
+  const refreshTodos = async () => {
+    await TodoService.fetchTodos();
     setTodos(TodoService.getTodos());
   };
 
@@ -33,7 +35,7 @@ export default function TodoList() {
           <TodoItem 
             key={index} 
             text={item.title} 
-            habit={item.habit} 
+            habit={item.habitTitle} 
             index={index} 
             refreshTodos={refreshTodos} 
           />

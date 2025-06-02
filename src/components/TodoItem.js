@@ -36,9 +36,11 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
             <CircleCheck className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
           </div>
           <span className="font-semibold">{taskTitle}</span>
-          <span className="px-2 py-1 bg-green-200 text-green-800 text-xs font-medium rounded">
-            {habit}
-          </span>
+          {habit && (
+            <span className="px-2 py-1 bg-green-200 text-green-800 text-xs font-medium rounded">
+              {habit}
+            </span>
+          )}
         </div>
 
         {/* Right Side: Edit and Delete Buttons */}
