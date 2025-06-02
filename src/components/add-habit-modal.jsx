@@ -106,12 +106,6 @@ export default function AddHabitModal({ isOpen, onClose }) {
       iconComponent: ICON_OPTIONS[selectedIconIndex].icon,
       count: 0,
     }
-
-    // console.log('newHabit', newHabit)
-
-    // Add the habit
-    // onAddHabit(newHabit)
-
     console.log({name: newHabit.name},
       {description: newHabit.description},
       {weekly_goal: newHabit.goal},

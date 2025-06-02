@@ -23,6 +23,7 @@ async function supabaseFetchTodos() {
  let { data: tasks, error } = await supabase
   .from('tasks')
   .select('*')
+  .is('completed_at', null)
   if (error) {
     console.error(error)
   } else {
@@ -40,6 +41,21 @@ async function supabaseFetchTodos() {
       }
     })) 
     saveTodos(todoObjects)
+  }
+}
+
+// updates a todo's completion date in supabase
+async function supabaseCheckOffTodo(index) {
+  const { tasks, error } = await supabase
+    .from('tasks')
+    .update({ completed_at: new Date() })
+    .eq('id', index)
+    .select()
+  if (error) {
+    console.error(error)
+  }
+  else {
+    console.log('updating', tasks)
   }
 }
 
@@ -86,6 +102,11 @@ export const TodoService = {
 
   getTodos() {
     return loadTodos();
+  },
+
+  async checkOffTodo(index) {
+    await supabaseCheckOffTodo(index);
+    supabaseFetchTodos();
   },
 
   async addTodo(title, habit) {

@@ -22,6 +22,10 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
     setShowEdit(false);
   };
 
+  const handleCheckOff = (index) => {
+    TodoService.checkOffTodo(index);
+    refreshTodos();
+  };
 
   return (
     <>
@@ -33,7 +37,7 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
             <Circle className="absolute inset-0 transition-opacity duration-200 opacity-100 group-hover:opacity-0" />
 
             {/* Check icon - visible on hover */}
-            <CircleCheck className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
+            <CircleCheck onClick={() => handleCheckOff(index)} className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
           </div>
           <span className="font-semibold">{taskTitle}</span>
           {habit && (
