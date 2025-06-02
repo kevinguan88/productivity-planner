@@ -44,7 +44,7 @@ export default function HabitTracker() {
                 const habitObjects = await Promise.all(habits.map(async (habit) => {
                     return {
                       id: habit.id,
-                      title: habit.name,
+                      title: habit.title,
                       color: habit.color,
                       // Add any other properties you want to include in the habit object
                     }

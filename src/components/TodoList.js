@@ -8,6 +8,7 @@ import Todo from '@/app/todo/page';
 export default function TodoList() {
   const [todos, setTodos] = useState([]);
 
+  // TODO: setTodos renders late, figure that out
   const refreshTodos = async () => {
     await TodoService.fetchTodos();
     setTodos(TodoService.getTodos());
@@ -36,7 +37,7 @@ export default function TodoList() {
             key={index} 
             text={item.title} 
             habit={item.habitTitle} 
-            index={index} 
+            index={item.index} 
             refreshTodos={refreshTodos} 
           />
         ))}

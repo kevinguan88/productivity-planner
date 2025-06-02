@@ -47,7 +47,7 @@ export default function HabitTracker() {
                       const completionCount = completions.length
                       return {
                         id: habit.id,
-                        name: habit.name,
+                        title: habit.title,
                         icon_name: habit.icon_name,
                         color: habit.color,
                         count: completionCount,
@@ -84,7 +84,7 @@ export default function HabitTracker() {
             <HabitCard
               key={habit.id}
               id={habit.id}
-              name={habit.name}
+              title={habit.title}
               icon_name={habit.icon_name}
               color={habit.color}
               initialCount={habit.count}

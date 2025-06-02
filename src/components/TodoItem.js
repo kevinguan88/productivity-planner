@@ -5,6 +5,7 @@ import { Trash2, Pencil, Circle, CircleCheck } from 'lucide-react';
 import ConfirmDialog from './ConfirmDialog';
 import EditTodoItemDialog from './EditTodoItemDialog';
 import { TodoService } from '../services/todo.service'; // Adjust the path as needed
+import Todo from '@/app/todo/page';
 
 export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -22,8 +23,9 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
     setShowEdit(false);
   };
 
-  const handleCheckOff = (index) => {
-    TodoService.checkOffTodo(index);
+  const handleCheckOff = async (index) => {
+    await TodoService.checkOffTodo(index);
+    //await console.log('checked off, got todos', TodoService.getTodos());
     refreshTodos();
   };
 

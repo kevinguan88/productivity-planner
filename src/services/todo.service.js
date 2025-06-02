@@ -40,6 +40,7 @@ async function supabaseFetchTodos() {
         habitId: task.habit_id
       }
     })) 
+    console.log('todoObjects', todoObjects)
     saveTodos(todoObjects)
   }
 }
@@ -80,18 +81,19 @@ async function supabaseInsertTodo(title, habit) {
 function loadTodos() {
   if (typeof window === 'undefined') return [];
   const data = localStorage.getItem(STORAGE_KEY);
-  console.log('loading todos', data)
+  console.log('loading todos', data);
   return data ? JSON.parse(data) : [];
 }
 
 // save todos TO local storage
 function saveTodos(todos) {
   if (typeof window === 'undefined') return;
+  console.log('saving todos', todos);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 }
 
 export const TodoService = {
-  fetchTodos() {
+  async fetchTodos() {
     supabaseFetchTodos();
   },
 
