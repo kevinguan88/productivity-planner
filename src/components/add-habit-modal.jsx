@@ -107,12 +107,6 @@ export default function AddHabitModal({ isOpen, onClose }) {
       iconComponent: ICON_OPTIONS[selectedIconIndex].icon,
       count: 0,
     }
-
-    // console.log('newHabit', newHabit)
-
-    // Add the habit
-    // onAddHabit(newHabit)
-
     console.log({name: newHabit.name},
       {description: newHabit.description},
       {weekly_goal: newHabit.goal},
@@ -121,7 +115,7 @@ export default function AddHabitModal({ isOpen, onClose }) {
 
     // Add the habit to the database
     let { error } = await supabase.from('habits').insert([
-      {name: newHabit.name, weekly_goal: newHabit.goal, color: newHabit.color, icon_name: newHabit.iconName, description: newHabit.description},  
+      {title: newHabit.name, weekly_goal: newHabit.goal, color: newHabit.color, icon_name: newHabit.iconName, description: newHabit.description},  
     ])
       if (error) {
         console.error(error)

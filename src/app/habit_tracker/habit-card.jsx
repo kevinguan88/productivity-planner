@@ -8,7 +8,7 @@ import * as Lucide from 'lucide-react'
 /**
  * Habit Card Component
  * @param {Object} props
- * @param {string} props.name - Habit name
+ * @param {string} props.title - Habit title
  * @param {string} props.icon_name - Emoji or icon for the habit
  * @param {string} props.color - Color for the progress bar and label
  * @param {number} props.initialCount - Initial count value
@@ -16,14 +16,14 @@ import * as Lucide from 'lucide-react'
  * @param {string} props.description - Habit description
  * @param {Function} props.onDelete - Function to call when deleting the habit
  */
-export default function HabitCard({ id, name, icon_name, color, initialCount, goal, description, onDelete }) {
+export default function HabitCard({ id, title, icon_name, color, initialCount, goal, description, onDelete }) {
   const [count, setCount] = useState(initialCount)
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef = useRef(null)
   const Trash2 = Lucide.Trash2
 
   const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete the "${name}" habit?`)) {
+    if (window.confirm(`Are you sure you want to delete the "${title}" habit?`)) {
       onDelete(id)
     }
     setShowDropdown(false)
@@ -118,14 +118,14 @@ export default function HabitCard({ id, name, icon_name, color, initialCount, go
           <button
             className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
             onClick={incrementCount}
-            aria-label={`Increment ${name}`}
+            aria-label={`Increment ${title}`}
           >
             <Plus className="w-5 h-5" />
           </button>
           <button
             className="w-8 h-8 rounded-full border border-gray-300 flex items-center justify-center hover:bg-gray-100 transition-colors"
             onClick={decrementCount}
-            aria-label={`Decrement ${name}`}
+            aria-label={`Decrement ${title}`}
           >
             <Minus className="w-5 h-5" />
           </button>
@@ -135,7 +135,7 @@ export default function HabitCard({ id, name, icon_name, color, initialCount, go
           <div className="text-white px-3 py-2 rounded-md inline-block mb-2" style={{ backgroundColor: color }}>
             <span className="flex items-center">
               <Icon className="w-4 h-4 mx-1" />
-              {name}
+              {title}
             </span>
           </div>
           <p className="text-gray-700">{description}</p>

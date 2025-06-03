@@ -5,6 +5,7 @@ import { Trash2, Pencil, Circle, CircleCheck } from 'lucide-react';
 import ConfirmDialog from './ConfirmDialog';
 import EditTodoItemDialog from './EditTodoItemDialog';
 import { TodoService } from '../services/todo.service'; // Adjust the path as needed
+import Todo from '@/app/todo/page';
 
 export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -22,6 +23,11 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
     setShowEdit(false);
   };
 
+  const handleCheckOff = async (index) => {
+    await TodoService.checkOffTodo(index);
+    //await console.log('checked off, got todos', TodoService.getTodos());
+    refreshTodos();
+  };
 
   return (
     <>
@@ -33,12 +39,14 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
             <Circle className="absolute inset-0 transition-opacity duration-200 opacity-100 group-hover:opacity-0" />
 
             {/* Check icon - visible on hover */}
-            <CircleCheck className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
+            <CircleCheck onClick={() => handleCheckOff(index)} className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
           </div>
           <span className="font-semibold">{taskTitle}</span>
-          <span className="px-2 py-1 bg-green-200 text-green-800 text-xs font-medium rounded">
-            {habit}
-          </span>
+          {habit && (
+            <span className="px-2 py-1 bg-green-200 text-green-800 text-xs font-medium rounded">
+              {habit}
+            </span>
+          )}
         </div>
 
         {/* Right Side: Edit and Delete Buttons */}
