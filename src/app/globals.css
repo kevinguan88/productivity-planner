@@ -37,6 +37,11 @@ body {
   background-image: linear-gradient(to right, #FF8C0020 15%, #AA410020 100%);
 }
 
+.bg-habit {
+  background-color: #f99957;
+  background-image: linear-gradient(to right, #FF8C0020 15%, #AA410020 100%);
+}
+
 /* Border classes for header */
 .border-header-home {
   border-bottom: 3px solid #00966E;
@@ -49,6 +54,9 @@ body {
 }
 .border-header-timer {
   border-bottom: 3px solid #B07200;
+}
+.border-header-habit {
+  border-bottom: 3px solid #b05500;
 }
 
 /* Border classes for footer */
@@ -63,4 +71,7 @@ body {
 }
 .border-footer-timer {
   border-top: 3px solid #B07200;
+}
+.border-footer-habit {
+  border-top: 3px solid #b05500;
 }

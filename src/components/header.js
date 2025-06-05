@@ -8,6 +8,8 @@ const styleMap = {
   "/calendar": { bg: "bg-calendar", border: "border-header-calendar" },
   "/todo": { bg: "bg-todo", border: "border-header-todo" },
   "/timer": { bg: "bg-timer", border: "border-header-timer" },
+  "/habit_tracker": { bg: "bg-habit", border: "border-header-habit" },
+
 };
 
 export default function Header() {
