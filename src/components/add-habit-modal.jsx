@@ -101,6 +101,7 @@ export default function AddHabitModal({ isOpen, onClose }) {
       description: description.trim(),
       goal: Number(goal),
       color,
+      //explain icon options
       iconLabel: ICON_OPTIONS[selectedIconIndex].label,
       iconName: ICON_OPTIONS[selectedIconIndex].key,
       iconComponent: ICON_OPTIONS[selectedIconIndex].icon,

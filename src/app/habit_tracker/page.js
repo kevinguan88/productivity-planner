@@ -21,6 +21,7 @@ export default function HabitTracker() {
     //   setHabits([...habits, newHabit])
     // }
 
+    //TODO: summarize what this does, maybe break down the function
     const fetchHabits = async () => {
             let { data: habits, error } = await supabase
                 .from('habits')
@@ -33,7 +34,7 @@ export default function HabitTracker() {
                    startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay())
                    const endOfWeek = new Date()
                    endOfWeek.setDate(endOfWeek.getDate() - endOfWeek.getDay() + 7)
-                               
+                  
                    const { data: completions, error: completionError } = await supabase
                      .from('habit_completion')
                      .select('id')
@@ -53,7 +54,6 @@ export default function HabitTracker() {
                         count: completionCount,
                         goal: habit.weekly_goal,
                         description: habit.description,
-                        // Add any other properties you want to include in the habit object
                       }
                     }
                   }))              

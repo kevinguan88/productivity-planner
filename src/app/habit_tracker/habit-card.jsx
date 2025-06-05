@@ -49,6 +49,7 @@ export default function HabitCard({ id, title, icon_name, color, initialCount, g
     }
   }
 
+  //check on backend for values below 0
   const decrementCount = async () => {
     if (count > 0) {
       setCount(count - 1)
