@@ -1,66 +1,124 @@
-"use client"
+﻿"use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import MonthCalendar from "@/components/month-calendar"
 import { addMonths, format } from "date-fns"
-import { supabase } from '@/lib/supabaseClient'
-
+import { HabitService } from '@/services/habit.service'
 
 export default function HabitTracker() {
   const [activeTab, setActiveTab] = useState("habits")
   const [currentDate, setCurrentDate] = useState(new Date())
   const [habitCompletions, setHabitCompletions] = useState([])
   const [habits, setHabits] = useState([])
+  const [refreshing, setRefreshing] = useState(false)
+  const lastRefreshRef = useRef(0)
+  const REFRESH_COOLDOWN = 2000 // 2 seconds minimum between refreshes
   
-      useEffect(() => {   
-          const fetchHabitCompletions = async () => {
-              let { data: habitCompletion, error } = await supabase
-                  .from('habit_completion')
-                  .select('*')
-              if (error) {
-                  console.error(error)
-              } else {
-                  const habitCompletionObjects = await Promise.all(habitCompletion.map(async (completion) => {
-                        return {
-                          habitId: completion.habit_id,
-                          timestamp: completion.completed_at                       
-                        }
-                      }
-                  ))              
-                  console.log(habitCompletionObjects)
-                  setHabitCompletions(habitCompletionObjects)
-              }
-          }
+  useEffect(() => {   
+    const loadData = async (showRefreshing = false) => {
+      if (showRefreshing) setRefreshing(true)
+      
+      try {
+        // Always refresh from server to get latest data
+        const [habitsData, completionsData] = await Promise.all([
+          HabitService.refreshHabits(),
+          HabitService.refreshHabitCompletions()
+        ])
+        
+        setHabits(habitsData)
+        setHabitCompletions(completionsData)
+        lastRefreshRef.current = Date.now()
+      } catch (error) {
+        console.error('Error loading data:', error)
+      } finally {
+        if (showRefreshing) setRefreshing(false)
+      }
+    }
 
-          const fetchHabits = async () => {
-            let { data: habits, error } = await supabase
-                .from('habits')
-                .select('*')
-            if (error) {
-                console.error(error)
-            } else {
-                const habitObjects = await Promise.all(habits.map(async (habit) => {
-                    return {
-                      id: habit.id,
-                      title: habit.title,
-                      color: habit.color,
-                      // Add any other properties you want to include in the habit object
-                    }
-                  }))              
-                console.log(habitObjects)
-                setHabits(habitObjects)
-            }
-          }
-        fetchHabitCompletions()
-        fetchHabits()
-      }, [])
+    // Initial load - try cache first, then refresh in background
+    const initialLoad = async () => {
+      try {
+        // Try to get cached data first for instant display
+        const [cachedHabits, cachedCompletions] = await Promise.all([
+          HabitService.getHabits(),
+          HabitService.getHabitCompletions()
+        ])
+        
+        // Show cached data immediately if available
+        if (cachedHabits.length > 0 || cachedCompletions.length > 0) {
+          setHabits(cachedHabits)
+          setHabitCompletions(cachedCompletions)
+        }
+        
+        // Then refresh in background to get latest data
+        loadData(false)
+      } catch (error) {
+        console.error('Error in initial load:', error)
+        // Fallback to direct refresh
+        loadData(false)
+      }
+    }
+
+    initialLoad()
+
+    // Background refresh when page becomes visible (seamless)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        const timeSinceLastRefresh = Date.now() - lastRefreshRef.current
+        if (timeSinceLastRefresh > REFRESH_COOLDOWN) {
+          loadData(false) // Background refresh, no loading state
+        }
+      }
+    }
+
+    // Background refresh when window gains focus (seamless)
+    const handleFocus = () => {
+      const timeSinceLastRefresh = Date.now() - lastRefreshRef.current
+      if (timeSinceLastRefresh > REFRESH_COOLDOWN) {
+        loadData(false) // Background refresh, no loading state
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', handleFocus)
+
+    // Cleanup event listeners
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', handleFocus)
+    }
+  }, [])
 
   const navigateMonth = (direction) => {
     setCurrentDate((prevDate) => {
       return direction === "prev" ? addMonths(prevDate, -1) : addMonths(prevDate, 1)
     })
+  }
+
+  // Seamless refresh function
+  const refreshData = async () => {
+    const timeSinceLastRefresh = Date.now() - lastRefreshRef.current
+    if (timeSinceLastRefresh < REFRESH_COOLDOWN) {
+      return // Skip if refreshed too recently
+    }
+
+    setRefreshing(true)
+    try {
+      const [habitsData, completionsData] = await Promise.all([
+        HabitService.refreshHabits(),
+        HabitService.refreshHabitCompletions()
+      ])
+      
+      setHabits(habitsData)
+      setHabitCompletions(completionsData)
+      lastRefreshRef.current = Date.now()
+    } catch (error) {
+      console.error('Error refreshing data:', error)
+    } finally {
+      setRefreshing(false)
+    }
   }
 
   return (
@@ -108,14 +166,43 @@ export default function HabitTracker() {
           </button>
         </div>
 
-        {/* Filter dropdown */}
-        <div className="relative">
-          <button className="bg-white text-black px-4 py-2 rounded-full flex items-center gap-2">
-            All Habits
-            <ChevronDown size={16} />
+        {/* Filter dropdown and refresh button */}
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <button className="bg-white text-black px-4 py-2 rounded-full flex items-center gap-2">
+              All Habits
+              <ChevronDown size={16} />
+            </button>
+          </div>
+          
+          {/* Seamless refresh button */}
+          <button
+            onClick={refreshData}
+            disabled={refreshing}
+            className={cn(
+              "bg-white text-black px-4 py-2 rounded-full text-sm font-medium transition-all duration-200",
+              refreshing 
+                ? "opacity-50 cursor-not-allowed" 
+                : "hover:bg-gray-100 hover:scale-105"
+            )}
+            title={refreshing ? "Refreshing..." : "Refresh data from server"}
+          >
+            <span className={cn("transition-transform duration-200", refreshing && "animate-spin")}>
+              
+            </span>
+            {refreshing ? " Refreshing..." : " Refresh"}
           </button>
         </div>
       </header>
+
+      {/* Subtle refresh indicator */}
+      {refreshing && (
+        <div className="bg-blue-50 border-b border-blue-200 px-4 py-1">
+          <p className="text-blue-600 text-sm text-center">
+            Updating data...
+          </p>
+        </div>
+      )}
 
       {/* Calendar */}
       <div className="w-full overflow-x-auto">

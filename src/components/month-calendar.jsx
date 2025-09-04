@@ -10,7 +10,7 @@ import {
   isToday,
 } from "date-fns"
 import { cn } from "@/lib/utils"
-import { lighten, transparentize } from "polished"
+import { lighten, transparentize, darken } from "polished"
 
 export default function MonthCalendar({ date, habits, habitCompletions }) {
   // Get all days in the current month view (including days from prev/next months)
@@ -23,8 +23,6 @@ export default function MonthCalendar({ date, habits, habitCompletions }) {
     start: calendarStart,
     end: calendarEnd,
   })
-
-
 
   // Group days into weeks
   const weeks = []
@@ -68,7 +66,6 @@ export default function MonthCalendar({ date, habits, habitCompletions }) {
 }
 
 function CalendarCell({ day, isCurrentMonth, habits, habitCompletions }) {
-
   // Get habit completions for this day
   const dayCompletions = getHabitCompletionsForDay(day, habits, habitCompletions)
 
@@ -76,8 +73,12 @@ function CalendarCell({ day, isCurrentMonth, habits, habitCompletions }) {
   const today = isToday(day)
 
   return (
-    <div className={cn("min-h-[120px] p-2 border border-[#e8e8e8]", !isCurrentMonth && "text-gray-400 bg-[#fafafa]")}>
-      <div className="font-medium mb-2">
+    <div className={cn(
+      "aspect-square p-2 border border-[#e8e8e8] flex flex-col", 
+      !isCurrentMonth && "text-gray-400 bg-[#fafafa]"
+    )}>
+      {/* Date header - fixed height */}
+      <div className="font-medium mb-2 flex-shrink-0">
         {today ? (
           <span className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-[#4b87ff] text-white">
             {format(day, "d")}
@@ -86,31 +87,33 @@ function CalendarCell({ day, isCurrentMonth, habits, habitCompletions }) {
           format(day, "d")
         )}
       </div>
-      <div className="flex flex-col gap-1 items-end">
-        {dayCompletions.map((habitData) => (
-          <div key={habitData.id} className="flex items-center gap-1">
-            <span className={cn("text-xs px-2 py-1 rounded-md")}
-            style={{
-                backgroundColor: transparentize(0.9, habitData.color),
-                color: habitData.color
-              }}
-            >
-              {habitData.title}
-            </span>
-            <span
-              className={cn(
-                "flex items-center justify-center w-6 h-6 rounded-full text-xs font-medium",
-              )}
-              style={{
-                backgroundColor: habitData.color,
-                color: "white"
-              }}
-
-            >
-              {habitData.count}
-            </span>
-          </div>
-        ))}
+      
+      {/* Scrollable habit list */}
+      <div className="flex-1 overflow-y-auto">
+        <div className="flex flex-col gap-2 items-end">
+          {dayCompletions.map((habitData) => (
+            <div key={habitData.id} className="flex items-center gap-2 flex-shrink-0">
+              <span 
+                className="text-sm px-3 py-2 rounded-md whitespace-nowrap"
+                style={{
+                  backgroundColor: transparentize(0.9, habitData.color),
+                  color: darken(0.15, habitData.color)
+                }}
+              >
+                {habitData.title}
+              </span>
+              <span
+                className="flex items-center justify-center w-8 h-8 rounded-full text-sm font-medium flex-shrink-0"
+                style={{
+                  backgroundColor: habitData.color,
+                  color: "white"
+                }}
+              >
+                {habitData.count}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
