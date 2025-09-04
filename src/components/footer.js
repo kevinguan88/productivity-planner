@@ -7,6 +7,7 @@ const styleMap = {
   "/calendar": { bg: "bg-calendar", border: "border-footer-calendar" },
   "/todo": { bg: "bg-todo", border: "border-footer-todo" },
   "/timer": { bg: "bg-timer", border: "border-footer-timer" },
+  "/habit_tracker": { bg: "bg-habit", border: "border-footer-habit" },
 };
 
 export default function Footer() {
