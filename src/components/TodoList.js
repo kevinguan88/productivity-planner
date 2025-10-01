@@ -33,13 +33,15 @@ export default function TodoList() {
     <div>
       <div>
         {todos.map((item, index) => (
-          <TodoItem 
-            key={index} 
-            text={item.title} 
-            habit={item.habitTitle} 
-            index={item.index} 
-            refreshTodos={refreshTodos} 
-          />
+          <div className="mb-4">
+            <TodoItem 
+              key={index} 
+              text={item.title} 
+              habit={item.habitTitle} 
+              index={item.index} 
+              refreshTodos={refreshTodos} 
+            />
+          </div>
         ))}
       </div>
       <button
