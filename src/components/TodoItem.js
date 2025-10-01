@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Trash2, Pencil, Circle, CircleCheck } from 'lucide-react';
+import { Trash2, Pencil, Circle, CircleCheck, GripVertical } from 'lucide-react';
 import ConfirmDialog from './ConfirmDialog';
 import EditTodoItemDialog from './EditTodoItemDialog';
 import { TodoService } from '../services/todo.service'; // Adjust the path as needed
@@ -31,9 +31,12 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
 
   return (
     <>
-      <div className="flex items-center justify-between border-2 m-1 p-2 bg-blue-100 border-neutral-600 rounded">
-        {/* Left Side: Title and Habit */}
+      <div className="bg-white rounded-2xl border-2 border-black p-6 shadow-sm flex justify-between">
         <div className="flex items-center gap-2">
+        <button className="text-[#666666] hover:text-black transition-colors mt-1">
+          <GripVertical className="w-8 h-8" />
+        </button>
+        {/* Left Side: Title and Habit */}
           <div className="relative w-6 h-6 group cursor-pointer">
             {/* Circle icon - visible by default */}
             <Circle className="absolute inset-0 transition-opacity duration-200 opacity-100 group-hover:opacity-0" />
@@ -41,7 +44,12 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
             {/* Check icon - visible on hover */}
             <CircleCheck onClick={() => handleCheckOff(index)} className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100" />
           </div>
-          <span className="font-semibold">{taskTitle}</span>
+          <div className="flex-1 min-w-0">
+            <h3 className="text-2xl font-normal text-black mb-2">{taskTitle}</h3>
+            <p className="text-[#666666] text-base leading-relaxed">
+              Lorem ipsum dolor sit amet consectetur adipiscing elit. Cras commodo... 
+            </p>
+          </div>
           {habit && (
             <span className="px-2 py-1 bg-green-200 text-green-800 text-xs font-medium rounded">
               {habit}
