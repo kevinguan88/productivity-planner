@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Trash2, Pencil, Circle, CircleCheck, GripVertical, MoreVertical } from 'lucide-react';
+import * as Lucide from 'lucide-react' 
 import ConfirmDialog from './ConfirmDialog';
 import EditTodoItemDialog from './EditTodoItemDialog';
 import { TodoService } from '../services/todo.service'; // Adjust the path as needed
 import Todo from '@/app/todo/page';
 
-export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }) {
+export default function TodoItem({ text: taskTitle, habit, index, color, icon_name, refreshTodos }) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -62,6 +63,8 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
     };
   }, [showMenu]);
 
+  const Icon = Lucide[icon_name] || Lucide.Circle;
+  
   return (
     <>
       <div className="flex items-start gap-3">
@@ -92,7 +95,8 @@ export default function TodoItem({ text: taskTitle, habit, index, refreshTodos }
               <div className="flex items-center gap-2">
                 {/* Reading badge */}
                 {habit && (
-                <div className="bg-[#f46555] text-white px-4 py-2 rounded-lg flex items-center gap-2">
+                <div className="text-white px-4 py-2 rounded-lg flex items-center gap-2" style={{ backgroundColor: color }}>
+                  <Icon className="w-4 h-4 " />
                   <span className="text-sm font-medium">{habit}</span>
                 </div>
                 )}

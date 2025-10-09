@@ -32,12 +32,16 @@ async function supabaseFetchTodos() {
     const todoObjects = await Promise.all(tasks.map(async (task) => {
       const habit = await supabaseFetchHabit(task.habit_id);
       const habitTitle = habit ? habit.title : '';
+      const habitColor = habit ? habit.color : '';
+      const habitIcon = habit ? habit.icon_name : '';
       console.log('habitTitle', habitTitle)
       return {
         index: task.id,
         title: task.title,
         habitTitle: habitTitle,
-        habitId: task.habit_id
+        habitId: task.habit_id,
+        habitColor: habitColor,
+        habitIcon: habitIcon
       }
     })) 
     console.log('todoObjects', todoObjects)

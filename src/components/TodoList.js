@@ -40,6 +40,8 @@ export default function TodoList() {
               habit={item.habitTitle} 
               index={item.index} 
               refreshTodos={refreshTodos} 
+              color={item.habitColor}
+              icon_name={item.habitIcon}
               //todo: add habit colors, icons, and descriptions
             />
           </div>
