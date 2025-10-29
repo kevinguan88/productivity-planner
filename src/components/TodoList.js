@@ -2,47 +2,44 @@
 
 import { useState, useEffect } from 'react';
 import TodoItem from './TodoItem';
-import { TodoService } from '../services/todo.service';
+import { getTodos, addTodo } from '@/actions/todos'
 import Todo from '@/app/todo/page';
 
-export default function TodoList() {
-  const [todos, setTodos] = useState([]);
+export default function TodoList({ initialTodos = [] }) {
+  const [todos, setTodos] = useState(initialTodos);
 
-  // TODO: setTodos renders late, figure that out
+  // Update todos when initialTodos prop changes (after server revalidation)
+  useEffect(() => {
+    setTodos(initialTodos);
+  }, [initialTodos]);
+
   const refreshTodos = async () => {
-    await TodoService.fetchTodos();
-    setTodos(TodoService.getTodos());
+    const todosData = await getTodos();
+    setTodos(todosData);
   };
 
-  useEffect(() => {
-    refreshTodos();
-  }, []);
-
-  const addRandomTask = () => {
+  const addRandomTask = async () => {
     const randomTitles = ['Buy Groceries', 'Walk the Dog', 'Read a Book', 'Call Mom', 'Clean Room'];
-    const randomHabits = ['Health', 'Family', 'Productivity', 'Finance', 'Hobby'];
-
     const randomTitle = randomTitles[Math.floor(Math.random() * randomTitles.length)];
-    const randomHabit = randomHabits[Math.floor(Math.random() * randomHabits.length)];
 
-    TodoService.addTodo(randomTitle, randomHabit);
-    refreshTodos();
+    const newTodo = await addTodo(randomTitle);
+    if (newTodo) {
+      setTodos(prev => [...prev, newTodo]);
+    }
   };
 
   return (
     <div>
       <div>
-        {todos.map((item, index) => (
-          <div className="mb-4">
+        {todos.map((item) => (
+          <div className="mb-4" key={item.id}>
             <TodoItem 
-              key={index} 
+              id={item.id}
               text={item.title} 
               habit={item.habitTitle} 
-              index={item.index} 
               refreshTodos={refreshTodos} 
               color={item.habitColor}
               icon_name={item.habitIcon}
-              //todo: add habit colors, icons, and descriptions
             />
           </div>
         ))}

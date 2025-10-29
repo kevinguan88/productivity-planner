@@ -9,14 +9,14 @@ export default function EditTodoItemDialog({
   onSave,
   onCancel
 }) {
-  const [title, setTitle] = useState(taskTitle);
-  const [habit, setHabit] = useState(taskHabit);
+  const [title, setTitle] = useState(taskTitle || '');
+  const [habit, setHabit] = useState(taskHabit || '');
 
   // Sync props to state when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setTitle(taskTitle);
-      setHabit(taskHabit);
+      setTitle(taskTitle || '');
+      setHabit(taskHabit || '');
     }
   }, [isOpen, taskTitle, taskHabit]);
 

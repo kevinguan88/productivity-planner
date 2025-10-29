@@ -5,31 +5,36 @@ import { Trash2, Pencil, Circle, CircleCheck, GripVertical, MoreVertical } from 
 import * as Lucide from 'lucide-react' 
 import ConfirmDialog from './ConfirmDialog';
 import EditTodoItemDialog from './EditTodoItemDialog';
-import { TodoService } from '../services/todo.service'; // Adjust the path as needed
+import { completeTodo, updateTodo, deleteTodo } from '@/actions/todos'
 import Todo from '@/app/todo/page';
 
-export default function TodoItem({ text: taskTitle, habit, index, color, icon_name, refreshTodos }) {
+export default function TodoItem({ id, text: taskTitle, habit, color, icon_name, refreshTodos }) {
   const [showConfirm, setShowConfirm] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(null);
 
-  const handleDelete = () => {
-    TodoService.deleteTodo(index);
-    refreshTodos(); // Refresh the parent list after deletion
+  const handleDelete = async () => {
+    const success = await deleteTodo(id);
+    if (success) {
+      refreshTodos(); // Refresh the parent list after deletion
+    }
     setShowConfirm(false);
   };
 
-  const handleEdit = (updatedItem) => {
-    TodoService.updateTodo(index, updatedItem);
-    refreshTodos();
+  const handleEdit = async (updatedItem) => {
+    const success = await updateTodo(id, { title: updatedItem.title });
+    if (success) {
+      refreshTodos();
+    }
     setShowEdit(false);
   };
 
-  const handleCheckOff = async (index) => {
-    await TodoService.checkOffTodo(index);
-    //await console.log('checked off, got todos', TodoService.getTodos());
-    refreshTodos();
+  const handleCheckOff = async () => {
+    const success = await completeTodo(id);
+    if (success) {
+      refreshTodos();
+    }
   };
 
   const handleMenuClick = () => {
@@ -79,7 +84,7 @@ export default function TodoItem({ text: taskTitle, habit, index, color, icon_na
               <Circle className="absolute inset-0 transition-opacity duration-200 opacity-100 group-hover:opacity-0 w-9 h-9" />
 
               {/* Check icon - visible on hover */}
-              <CircleCheck onClick={() => handleCheckOff(index)} className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100 w-9 h-9" />
+              <CircleCheck onClick={handleCheckOff} className="absolute inset-0 transition-opacity duration-200 opacity-0 group-hover:opacity-100 w-9 h-9" />
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-2xl font-normal text-black mb-2 h-10">{taskTitle}</h3>

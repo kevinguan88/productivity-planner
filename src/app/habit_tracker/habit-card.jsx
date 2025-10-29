@@ -2,7 +2,7 @@
 
 import { Plus, Minus, MoreVertical } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
-import { supabase } from '@/lib/supabaseClient'
+import { addHabitCompletion, removeHabitCompletion } from '@/actions/habits'
 import * as Lucide from 'lucide-react' 
 
 /**
@@ -33,40 +33,22 @@ export default function HabitCard({ id, title, icon_name, color, initialCount, g
   const incrementCount = async () => {
     if (count < goal) {
       setCount(count + 1)
-      const { data, error } = await supabase
-        .from('habit_completion')
-        .insert([
-          { habit_id: id, completed_at: new Date(), },
-        ])
-        .select()
-        if (error) {
-          console.error(error)
-        }
-        else {
-          console.log("inserting", data)
-        }
-
+      const success = await addHabitCompletion(id)
+      if (!success) {
+        // If failed, revert the count
+        setCount(count)
+      }
     }
   }
 
-  //check on backend for values below 0
   const decrementCount = async () => {
     if (count > 0) {
       setCount(count - 1)
-      const { data, error } = await supabase
-        .from('habit_completion')
-        .delete()
-        .eq('habit_id', id)
-        .order('completed_at', { ascending: false })
-        .limit(1)
-
-    if (error) {
-      console.error(error)
-    }
-    else {
-      console.log("deleting", data)
-    }
-
+      const success = await removeHabitCompletion(id)
+      if (!success) {
+        // If failed, revert the count
+        setCount(count)
+      }
     }
   }
 

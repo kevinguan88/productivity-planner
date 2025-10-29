@@ -5,7 +5,7 @@ import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { cn } from "@/lib/utils"
 import MonthCalendar from "@/components/month-calendar"
 import { addMonths, format } from "date-fns"
-import { HabitService } from '@/services/habit.service'
+import { getHabits, getHabitCompletions } from '@/actions/habits'
 
 export default function HabitTracker() {
   const [activeTab, setActiveTab] = useState("habits")
@@ -23,8 +23,8 @@ export default function HabitTracker() {
       try {
         // Always refresh from server to get latest data
         const [habitsData, completionsData] = await Promise.all([
-          HabitService.refreshHabits(),
-          HabitService.refreshHabitCompletions()
+          getHabits(),
+          getHabitCompletions()
         ])
         
         setHabits(habitsData)
@@ -42,8 +42,8 @@ export default function HabitTracker() {
       try {
         // Try to get cached data first for instant display
         const [cachedHabits, cachedCompletions] = await Promise.all([
-          HabitService.getHabits(),
-          HabitService.getHabitCompletions()
+          getHabits(),
+          getHabitCompletions()
         ])
         
         // Show cached data immediately if available
@@ -107,8 +107,8 @@ export default function HabitTracker() {
     setRefreshing(true)
     try {
       const [habitsData, completionsData] = await Promise.all([
-        HabitService.refreshHabits(),
-        HabitService.refreshHabitCompletions()
+        getHabits(),
+        getHabitCompletions()
       ])
       
       setHabits(habitsData)

@@ -31,7 +31,7 @@ import {
   Calendar,
   Flame,
 } from "lucide-react"
-import { supabase } from '@/lib/supabaseClient'
+import { addHabit } from '@/actions/habits'
 
 
 
@@ -78,7 +78,7 @@ const COLOR_PRESETS = [
   { name: "Yellow", value: "#ffd43b" },
 ]
 
-export default function AddHabitModal({ isOpen, onClose }) {
+export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [goal, setGoal] = useState(5)
@@ -113,15 +113,8 @@ export default function AddHabitModal({ isOpen, onClose }) {
       {color: newHabit.color},
       {icon_name: newHabit.iconName})
 
-    // Add the habit to the database
-    let { error } = await supabase.from('habits').insert([
-      {title: newHabit.name, weekly_goal: newHabit.goal, color: newHabit.color, icon_name: newHabit.iconName, description: newHabit.description},  
-    ])
-      if (error) {
-        console.error(error)
-      }
-
-    console.log('inserting,', newHabit)
+    // Add the habit using server action
+    await onAddHabit(newHabit)
 
     // Reset form and close modal
     resetForm()
