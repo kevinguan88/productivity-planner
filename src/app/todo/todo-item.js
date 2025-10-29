@@ -3,10 +3,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { Trash2, Pencil, Circle, CircleCheck, GripVertical, MoreVertical } from 'lucide-react';
 import * as Lucide from 'lucide-react' 
-import ConfirmDialog from './ConfirmDialog';
-import EditTodoItemDialog from './EditTodoItemDialog';
+import ConfirmDialog from './confirm-dialog';
+import EditTodoItemDialog from './edit-todo-item-dialog';
 import { completeTodo, updateTodo, deleteTodo } from '@/actions/todos'
-import Todo from '@/app/todo/page';
 
 export default function TodoItem({ id, text: taskTitle, habit, color, icon_name, refreshTodos }) {
   const [showConfirm, setShowConfirm] = useState(false);

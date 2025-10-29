@@ -33,8 +33,6 @@ import {
 } from "lucide-react"
 import { addHabit } from '@/actions/habits'
 
-
-
 // Array of Lucide icons with their names
 const ICON_OPTIONS = [
   { icon: Book, label: "Book", key: "Book" },
@@ -89,34 +87,24 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    // Basic validation
     if (!name.trim()) {
       alert("Please enter a habit name")
       return
     }
 
-    // Create new habit object
     const newHabit = {
       name: name.trim(),
       description: description.trim(),
       goal: Number(goal),
       color,
-      //explain icon options
       iconLabel: ICON_OPTIONS[selectedIconIndex].label,
       iconName: ICON_OPTIONS[selectedIconIndex].key,
       iconComponent: ICON_OPTIONS[selectedIconIndex].icon,
       count: 0,
     }
-    console.log({name: newHabit.name},
-      {description: newHabit.description},
-      {weekly_goal: newHabit.goal},
-      {color: newHabit.color},
-      {icon_name: newHabit.iconName})
 
-    // Add the habit using server action
     await onAddHabit(newHabit)
 
-    // Reset form and close modal
     resetForm()
     onClose()
   }
@@ -143,7 +131,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
-          {/* Name Input */}
           <div>
             <label htmlFor="habit-name" className="block text-sm font-medium text-gray-700 mb-1">
               Habit Name*
@@ -159,7 +146,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
             />
           </div>
 
-          {/* Description Input */}
           <div>
             <label htmlFor="habit-description" className="block text-sm font-medium text-gray-700 mb-1">
               Description
@@ -174,7 +160,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
             />
           </div>
 
-          {/* Weekly Goal Input */}
           <div>
             <label htmlFor="habit-goal" className="block text-sm font-medium text-gray-700 mb-1">
               Weekly Goal
@@ -190,11 +175,9 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
             />
           </div>
 
-          {/* Color Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
 
-            {/* Color Presets */}
             <div className="flex flex-wrap gap-2 mb-3">
               {COLOR_PRESETS.map((colorOption, index) => (
                 <button
@@ -213,7 +196,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
                 />
               ))}
 
-              {/* Custom color button */}
               <button
                 type="button"
                 onClick={() => setShowCustomColor(true)}
@@ -230,7 +212,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
               </button>
             </div>
 
-            {/* Custom Color Picker */}
             {showCustomColor && (
               <div className="mb-3">
                 <div className="flex items-center space-x-3">
@@ -254,7 +235,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
               </div>
             )}
 
-            {/* Selected Color Preview */}
             <div className="flex items-center space-x-3 mt-2">
               <div
                 className="w-6 h-6 rounded-full border border-gray-300"
@@ -265,7 +245,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
             </div>
           </div>
 
-          {/* Icon Selection */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Icon</label>
             <div className="grid grid-cols-6 gap-2 max-h-48 overflow-y-auto p-2 border border-gray-200 rounded-md">
@@ -293,7 +272,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
               })}
             </div>
 
-            {/* Selected Icon Preview */}
             <div className="flex items-center space-x-3 mt-3">
               {(() => {
                 const SelectedIcon = ICON_OPTIONS[selectedIconIndex].icon
@@ -314,7 +292,6 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
             </div>
           </div>
 
-          {/* Action Buttons */}
           <div className="flex justify-end space-x-3 pt-4 border-t">
             <button
               type="button"

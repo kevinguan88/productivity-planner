@@ -3,7 +3,7 @@
 import HabitCard from "./habit-card"
 import { useState, useEffect, useRef, useTransition } from "react"
 import { Plus } from "lucide-react"
-import AddHabitModal from "@/components/add-habit-modal"
+import AddHabitModal from "./add-habit-modal"
 import { addHabit, deleteHabit, getHabitsWithCounts } from '@/actions/habits'
 import { cn } from "@/lib/utils"
 
