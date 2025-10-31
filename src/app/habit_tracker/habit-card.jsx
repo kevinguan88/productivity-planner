@@ -15,16 +15,25 @@ import * as Lucide from 'lucide-react'
  * @param {number} props.goal - Goal count value
  * @param {string} props.description - Habit description
  * @param {Function} props.onDelete - Function to call when deleting the habit
+ * @param {Function} props.onEdit - Function to call when editing the habit
  */
-export default function HabitCard({ id, title, icon_name, color, initialCount, goal, description, onDelete }) {
+export default function HabitCard({ id, title, icon_name, color, initialCount, goal, description, onDelete, onEdit }) {
   const [count, setCount] = useState(initialCount)
   const [showDropdown, setShowDropdown] = useState(false)
   const dropdownRef = useRef(null)
   const Trash2 = Lucide.Trash2
+  const Pencil = Lucide.Pencil
 
   const handleDelete = () => {
     if (window.confirm(`Are you sure you want to delete the "${title}" habit?`)) {
       onDelete(id)
+    }
+    setShowDropdown(false)
+  }
+
+  const handleEdit = () => {
+    if (onEdit) {
+      onEdit(id)
     }
     setShowDropdown(false)
   }
@@ -72,6 +81,13 @@ export default function HabitCard({ id, title, icon_name, color, initialCount, g
         {/* Dropdown Menu */}
         {showDropdown && (
           <div className="absolute right-0 top-8 bg-white border border-gray-200 rounded-lg shadow-lg z-10 min-w-[120px]">
+            <button
+              onClick={handleEdit}
+              className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-2 rounded-lg transition-colors"
+            >
+              <Pencil className="w-4 h-4" />
+              Edit
+            </button>
             <button
               onClick={handleDelete}
               className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 flex items-center gap-2 rounded-lg transition-colors"

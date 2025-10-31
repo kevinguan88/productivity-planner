@@ -207,6 +207,38 @@ export async function addHabitCompletion(habitId) {
   }
 }
 
+// Update an existing habit
+export async function updateHabit(habitId, title, color, iconName = '', description = '', weeklyGoal = 7) {
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('habits')
+      .update({ 
+        title, 
+        color, 
+        icon_name: iconName, 
+        description, 
+        weekly_goal: weeklyGoal 
+      })
+      .eq('id', habitId)
+      .select()
+
+    if (error) {
+      console.error('Error updating habit:', error)
+      return null
+    }
+
+    // Revalidate the habit tracker page to show updated habit
+    revalidatePath('/habit_tracker')
+    revalidatePath('/calendar')
+    
+    return data[0]
+  } catch (error) {
+    console.error('Error in updateHabit:', error)
+    return null
+  }
+}
+
 // Remove the most recent habit completion
 export async function removeHabitCompletion(habitId) {
   try {

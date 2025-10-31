@@ -4,12 +4,15 @@ import HabitCard from "./habit-card"
 import { useState, useEffect, useRef, useTransition } from "react"
 import { Plus } from "lucide-react"
 import AddHabitModal from "./add-habit-modal"
-import { addHabit, deleteHabit, getHabitsWithCounts } from '@/actions/habits'
+import EditHabitModal from "./edit-habit-modal"
+import { addHabit, deleteHabit, updateHabit, getHabitsWithCounts } from '@/actions/habits'
 import { cn } from "@/lib/utils"
 
 export default function HabitTrackerClient({ initialHabits }) {
   const [habits, setHabits] = useState(initialHabits)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
+  const [selectedHabit, setSelectedHabit] = useState(null)
   const [refreshing, setRefreshing] = useState(false)
   const [isPending, startTransition] = useTransition()
   const lastRefreshRef = useRef(0)
@@ -88,6 +91,50 @@ export default function HabitTrackerClient({ initialHabits }) {
         }
       } catch (error) {
         console.error('Error adding habit:', error)
+      }
+    })
+  }
+
+  const handleEditHabit = (habitId) => {
+    const habit = habits.find(h => h.id === habitId)
+    if (habit) {
+      setSelectedHabit(habit)
+      setIsEditModalOpen(true)
+    }
+  }
+
+  const handleUpdateHabit = async (updatedHabit) => {
+    startTransition(async () => {
+      try {
+        const updated = await updateHabit(
+          updatedHabit.id,
+          updatedHabit.name,
+          updatedHabit.color,
+          updatedHabit.iconName,
+          updatedHabit.description,
+          updatedHabit.goal
+        )
+        
+        if (updated) {
+          // Optimistic update - update in UI immediately
+          setHabits(prev => prev.map(habit => 
+            habit.id === updatedHabit.id 
+              ? {
+                  ...habit,
+                  title: updatedHabit.name,
+                  color: updatedHabit.color,
+                  icon_name: updatedHabit.iconName,
+                  description: updatedHabit.description,
+                  goal: updatedHabit.goal,
+                }
+              : habit
+          ))
+        }
+      } catch (error) {
+        console.error('Error updating habit:', error)
+        // Refresh to restore correct state
+        const habitsData = await getHabitsWithCounts()
+        setHabits(habitsData)
       }
     })
   }
@@ -179,6 +226,7 @@ export default function HabitTrackerClient({ initialHabits }) {
               goal={habit.goal}
               description={habit.description}
               onDelete={handleDeleteHabit}
+              onEdit={handleEditHabit}
             />
           ))}
 
@@ -205,6 +253,17 @@ export default function HabitTrackerClient({ initialHabits }) {
         isOpen={isModalOpen} 
         onClose={() => setIsModalOpen(false)} 
         onAddHabit={handleAddHabit}
+      />
+      
+      {/* Edit Habit Modal */}
+      <EditHabitModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false)
+          setSelectedHabit(null)
+        }}
+        habit={selectedHabit}
+        onUpdateHabit={handleUpdateHabit}
       />
     </div>
   )

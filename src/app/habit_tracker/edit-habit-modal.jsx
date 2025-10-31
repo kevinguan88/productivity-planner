@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   X,
   Book,
@@ -31,7 +31,6 @@ import {
   Calendar,
   Flame,
 } from "lucide-react"
-import { addHabit } from '@/actions/habits'
 
 // Array of Lucide icons with their names
 const ICON_OPTIONS = [
@@ -76,13 +75,31 @@ const COLOR_PRESETS = [
   { name: "Yellow", value: "#ffd43b" },
 ]
 
-export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
+export default function EditHabitModal({ isOpen, onClose, habit, onUpdateHabit }) {
   const [name, setName] = useState("")
   const [description, setDescription] = useState("")
   const [goal, setGoal] = useState(5)
   const [color, setColor] = useState("#4b87ff")
   const [selectedIconIndex, setSelectedIconIndex] = useState(0)
-  const [showCustomColor, setShowCustomColor] = useState(false)  
+  const [showCustomColor, setShowCustomColor] = useState(false)
+
+  // Initialize form with habit data when habit prop changes
+  useEffect(() => {
+    if (habit) {
+      setName(habit.title || "")
+      setDescription(habit.description || "")
+      setGoal(habit.goal || 5)
+      setColor(habit.color || "#4b87ff")
+      
+      // Find the icon index based on icon_name
+      const iconIndex = ICON_OPTIONS.findIndex(option => option.key === habit.icon_name)
+      setSelectedIconIndex(iconIndex >= 0 ? iconIndex : 0)
+      
+      // Check if color is a custom color (not in presets)
+      const isPresetColor = COLOR_PRESETS.some(preset => preset.value === habit.color)
+      setShowCustomColor(!isPresetColor && habit.color)
+    }
+  }, [habit])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -92,7 +109,8 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
       return
     }
 
-    const newHabit = {
+    const updatedHabit = {
+      id: habit.id,
       name: name.trim(),
       description: description.trim(),
       goal: Number(goal),
@@ -100,31 +118,19 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
       iconLabel: ICON_OPTIONS[selectedIconIndex].label,
       iconName: ICON_OPTIONS[selectedIconIndex].key,
       iconComponent: ICON_OPTIONS[selectedIconIndex].icon,
-      count: 0,
     }
 
-    await onAddHabit(newHabit)
-
-    resetForm()
+    await onUpdateHabit(updatedHabit)
     onClose()
   }
 
-  const resetForm = () => {
-    setName("")
-    setDescription("")
-    setGoal(5)
-    setColor("#4b87ff")
-    setSelectedIconIndex(0)
-    setShowCustomColor(false)
-  }
-
-  if (!isOpen) return null
+  if (!isOpen || !habit) return null
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
       <div className="bg-white rounded-lg shadow-xl w-full max-w-md my-8">
         <div className="flex justify-between items-center p-4 border-b">
-          <h2 className="text-xl font-semibold">Add New Habit</h2>
+          <h2 className="text-xl font-semibold">Edit Habit</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700" aria-label="Close">
             <X className="w-5 h-5" />
           </button>
@@ -260,8 +266,8 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
                         ? "bg-gray-100 border-2 border-gray-400"
                         : "border border-gray-200 hover:bg-gray-50"
                     }`}
-                    aria-label={`Select ${iconOption.name} icon`}
-                    title={iconOption.name}
+                    aria-label={`Select ${iconOption.label} icon`}
+                    title={iconOption.label}
                   >
                     <IconComponent
                       className="w-5 h-5"
@@ -284,7 +290,7 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
                       <SelectedIcon className="w-5 h-5 text-white" />
                     </div>
                     <span className="text-sm text-gray-600">
-                      {ICON_OPTIONS[selectedIconIndex].name} icon with selected color
+                      {ICON_OPTIONS[selectedIconIndex].label} icon with selected color
                     </span>
                   </>
                 )
@@ -301,7 +307,7 @@ export default function AddHabitModal({ isOpen, onClose, onAddHabit }) {
               Cancel
             </button>
             <button type="submit" className="px-4 py-2 bg-[#4b87ff] text-white rounded-md hover:bg-[#3a76ee]">
-              Add Habit
+              Save Changes
             </button>
           </div>
         </form>
