@@ -5,9 +5,10 @@ export default async function Todo() {
     const initialTodos = await getTodos()
     
     return (
-        <div className="flex justify-center ">
-            <div className="border-2 m-1 bg-white-300 h-full flex-1 border-neutral-400 max-w-6xl w-full">
-               <TodoClient initialTodos={initialTodos} />
+        <div className="flex-1 bg-white p-4 flex flex-col items-center space-y-4">
+            <div className="w-[60%] bg-white rounded-lg shadow-lg p-6 flex flex-col space-y-4 min-w-[400px]">
+                <h1 className="text-2xl font-bold text-gray-800">To-Do List</h1>
+                <TodoClient initialTodos={initialTodos} />
             </div>
         </div>
     )
