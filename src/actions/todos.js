@@ -54,15 +54,22 @@ export async function getTodos() {
 }
 
 // Add a new todo
-export async function addTodo(title, habitId = null) {
+export async function addTodo(title, habitId = null, description = null) {
   try {
     const supabase = await createClient()
+    const todoData = { 
+      title, 
+      habit_id: habitId 
+    }
+    
+    // Only include description if it's provided
+    if (description) {
+      todoData.description = description
+    }
+    
     const { data, error } = await supabase
       .from('tasks')
-      .insert([{ 
-        title, 
-        habit_id: habitId 
-      }])
+      .insert([todoData])
       .select()
 
     if (error) {
@@ -88,15 +95,29 @@ export async function completeTodo(todoId) {
       .from('tasks')
       .update({ completed_at: new Date() })
       .eq('id', todoId)
-      .select()
-
+      .select('id, habit_id, completed_at')
+      .single()
+      
     if (error) {
       console.error('Error completing todo:', error)
       return false
     }
 
+    const completedTodo = data
+    if (completedTodo && completedTodo.habit_id != null) {
+      const { error: completionError } = await supabase
+        .from('habit_completion')
+        .insert([{ habit_id: completedTodo.habit_id, completed_at: new Date() }])
+
+      if (completionError) {
+        console.error('Error adding habit completion with task checkoff:', completionError)
+        return false
+      }
+    }
     // Revalidate the todo page
     revalidatePath('/todo')
+    revalidatePath('/habit_tracker')
+    revalidatePath('/calendar')
     
     return true
   } catch (error) {
